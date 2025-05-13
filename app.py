@@ -1,9 +1,21 @@
-#!/usr/bin/env python
-# coding: utf-8
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+import os
+import json
 
-# # Environment Setup
+# Write the credentials to a temp file
+credentials_path = "/tmp/google_credentials.json"
+with open(credentials_path, "w") as f:
+    f.write(os.getenv("GOOGLE_CREDENTIALS"))
 
-# In[33]:
+# Use gspread to access Google Sheets
+scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+creds = ServiceAccountCredentials.from_json_keyfile_name(credentials_path, scope)
+client = gspread.authorize(creds)
+
+
+
+# # Setup
 
 
 import dash
@@ -13,46 +25,36 @@ import plotly.express as px
 from plotly.subplots import make_subplots
 import pandas as pd
 import numpy as np
-# Ignore warnings
-import warnings
-warnings.filterwarnings('ignore')
 
 
-# In[2]:
-
-
-dfP = pd.read_excel(r'/Users/dans/Desktop/UK WORK 25/Security4Peace JAN25/HSI Survey P8.xlsx')
-dfW = pd.read_excel(r'/Users/dans/Desktop/UK WORK 25/Security4Peace JAN25/HSI Survey W3.xlsx')
-
+# Open the Google Sheet by its URL or name
+ssW = client.open_by_url("https://docs.google.com/spreadsheets/d/1Y7F-pC97Knf2V7di2Z5cN7InZRwsivIm/edit")
+ssP = client.open_by_url("https://docs.google.com/spreadsheets/d/1Er68I5ds2PDSPfVTRUn5N6BaURGbr9Md/edit")
+                         
+# Select a worksheet (e.g., the first sheet)
+wsW = ssW.get_worksheet(0)
+wsP = ssP.get_worksheet(0)
+# Fetch all data as a list of dictionaries
+dP = wsP.get_all_records()
+dW = wsW.get_all_records()
+# Convert to a Pandas DataFrame
+dfP = pd.DataFrame(dP)
+dfW = pd.DataFrame(dW)
 
 # # Dataframe Setup
 
-# In[3]:
-
-
 Cats = ['SI', 'Index', 'Index 2', 'Type 2', 'VI']
-
 Pera = ['SI', 'Index', 'Index 2', 'Type 2', 'VI',
-         'ALL %', 'Ml %', 'Fl %',
-         'A %', 'M A %', 'F A %', 
-         'J %', 'M J %', 'F J %', 
-         'O %', 'M O %', 'F O %', 
-         'M %', 'M M %', 'F M %', 
-         ]
+         'ALL %', 'Ml %', 'Fl %', 'A %', 'M A %', 'F A %', 'J %', 'M J %', 'F J %', 'O %', 'M O %', 'F O %', 'M %', 'M M %', 'F M %']
 Perz = ['SI', 'Index', 'Index 2', 'Type 2', 'VI', 'ALL %',
-        'Z1 %', 'Z1 Ml %', 'Z1 Fl %', 'Z1 A %', 'Z1 J %', 'Z1 O %', 'Z1 M %', 
-        'Z2 %', 'Z2 Ml %', 'Z2 Fl %', 'Z2 A %', 'Z2 J %', 'Z2 O %', 'Z2 M %', 
-        'Z3 %', 'Z3 Ml %', 'Z3 Fl %', 'Z3 A %', 'Z3 J %', 'Z3 O %', 'Z3 M %', 
-        'Z4 %', 'Z4 Ml %', 'Z4 Fl %', 'Z4 A %', 'Z4 J %', 'Z4 O %', 'Z4 M %' 
+        'Z1 %', 'Z1 Ml %', 'Z1 Fl %', 'Z1 A %', 'Z1 J %', 'Z1 O %', 'Z1 M %', 'Z2 %', 'Z2 Ml %', 'Z2 Fl %', 'Z2 A %', 'Z2 J %', 'Z2 O %', 'Z2 M %', 
+        'Z3 %', 'Z3 Ml %', 'Z3 Fl %', 'Z3 A %', 'Z3 J %', 'Z3 O %', 'Z3 M %', 'Z4 %', 'Z4 Ml %', 'Z4 Fl %', 'Z4 A %', 'Z4 J %', 'Z4 O %', 'Z4 M %' 
         ]
+
 dfP1 = dfP[Pera]
 dfP2 = dfP[Perz]
 
-
-# In[4]:
-
-
-# Common column renaming mapping
+# Column renaming mapping
 rename_map = {
     'A': 'Age 15-19', 'J': 'Age 20-29', 'O': 'Age 30-59', 'M': 'Age 60+', 
     'M A': 'Male(15-19)', 'M J': 'Male(20-29)', 'M O': 'Male(30-59)', 'M M': 'Male(60+)', 
@@ -80,27 +82,16 @@ dfP = dfP.rename(columns=rename_map, errors='ignore')
 dfP1 = dfP1.rename(columns=rename_map, errors='ignore')
 dfP2 = dfP2.rename(columns=rename_map, errors='ignore')
 
-
-# In[5]:
-
-
 dfP1 = dfP1.melt(id_vars=Cats, var_name='Category', value_name='Value')
-
 dfP1['Value'] = dfP1['Value'].astype(float)
 dfP1['Category'] = dfP1['Category'].astype('category')
 
-
-# In[6]:
-
-
 dfP2 = dfP2.melt(id_vars=Cats, var_name='Category', value_name='Value')
-
 dfP2['Value'] = dfP2['Value'].astype(float)
 dfP2['Category'] = dfP2['Category'].astype('category')
 
 
-# In[7]:
-
+# Dataset Configuration
 
 dfS = {}
 
@@ -116,9 +107,6 @@ D6 = dfS["D6"].reset_index().copy()
 D7 = dfS["D7"].reset_index().copy()
 D8 = dfS["D8"].reset_index().copy()
 D9 = dfS["D9"].reset_index().copy()
-
-
-# In[8]:
 
 
 dfZ = {}
@@ -137,10 +125,8 @@ DZ8 = dfZ["D8"].reset_index().copy()
 DZ9 = dfZ["D9"].reset_index().copy()
 
 
-# In[34]:
+# DASH D Plot
 
-
-# Full translation attempt
 for name, df in dfS.items():
 # Translated columns
     df['Category_en'] = df['Category']
@@ -290,21 +276,12 @@ def update_chart(dataset_key, dimension_key, lang):
 
     return fig, translations[lang]['title']
 
-# Set up a tunnel
-#public_url = ngrok.connect(8050)
-#print("Your app is available at:", public_url)
-
-# Basic Dash app
-#app.run(port=8050)
-
 if __name__ == '__main__':
     app.run_server(debug=False, port=8080), host='0.0.0.0')
 
 
-# In[38]:
+# DASH Z Plot
 
-
-# Full translation attempt 2
 for name, df in dfZ.items():
 # Translated columns
     df['Category_en'] = df['Category']
@@ -436,18 +413,11 @@ def update_chart(dataset_key, dimension_key, lang):
 
     return fig, translations[lang]['title']
 
-# Set up a tunnel
-#public_url = ngrok.connect(8050)
-#print("Your app is available at:", public_url)
-
-# Basic Dash app
-#app.run(port=8050)
-
 if __name__ == '__main__':
     app.run_server(debug=False, port=8080, host='0.0.0.0')
 
 
-# In[40]:
+# DASH Pie Plot:
 
 
 #Pie charts
