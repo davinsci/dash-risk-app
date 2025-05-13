@@ -25,12 +25,12 @@ import numpy as np
 HSI = client.open_by_url("https://docs.google.com/spreadsheets/d/1D5V-B51Van2Vt1frrM8xkMyI9_3t-r26YFkuxv-B67M/edit")
                          
 # Select a worksheet (e.g., the first sheet)
-wsP = HSI.get_worksheet(0)
-wsW = HSI.get_worksheet(1)
+wsP = HSI.get_worksheet('P8')
+#wsW = HSI.get_worksheet('W3')
 
 # Convert to a Pandas DataFrame
 dfP = pd.DataFrame(wsP.get_all_records())
-dfW = pd.DataFrame(wsW.get_all_records())
+#dfW = pd.DataFrame(wsW.get_all_records())
 
 
 # # Dataframe Setup
