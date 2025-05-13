@@ -6,13 +6,12 @@ import json
 # Write the credentials to a temp file
 credentials_path = "/tmp/google_credentials.json"
 with open(credentials_path, "w") as f:
-    f.write(os.getenv("GOOGLE_CREDENTIALS"))
+    f.write(os.getenv("GOOGLE_CREDS"))
 
 # Use gspread to access Google Sheets
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 creds = ServiceAccountCredentials.from_json_keyfile_name(credentials_path, scope)
 client = gspread.authorize(creds)
-
 
 
 # # Setup
@@ -26,20 +25,17 @@ from plotly.subplots import make_subplots
 import pandas as pd
 import numpy as np
 
-
 # Open the Google Sheet by its URL or name
-ssW = client.open_by_url("https://docs.google.com/spreadsheets/d/1Y7F-pC97Knf2V7di2Z5cN7InZRwsivIm/edit")
-ssP = client.open_by_url("https://docs.google.com/spreadsheets/d/1Er68I5ds2PDSPfVTRUn5N6BaURGbr9Md/edit")
+HSI = client.open_by_url("https://docs.google.com/spreadsheets/d/1D5V-B51Van2Vt1frrM8xkMyI9_3t-r26YFkuxv-B67M/edit")
                          
 # Select a worksheet (e.g., the first sheet)
-wsW = ssW.get_worksheet(0)
-wsP = ssP.get_worksheet(0)
-# Fetch all data as a list of dictionaries
-dP = wsP.get_all_records()
-dW = wsW.get_all_records()
+wsP = HSI.get_worksheet(0)
+wsW = HSI.get_worksheet(1)
+
 # Convert to a Pandas DataFrame
-dfP = pd.DataFrame(dP)
-dfW = pd.DataFrame(dW)
+dfP = pd.DataFrame(wsP.get_all_records())
+dfW = pd.DataFrame(wsW.get_all_records())
+
 
 # # Dataframe Setup
 
