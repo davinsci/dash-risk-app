@@ -119,7 +119,7 @@ DZ9 = dfZ["D9"].reset_index().copy()
 # DASH D Plot
 
 # Full translation attempt
-for name, df in datasets.items():
+for name, df in dfS.items():
 # Translated columns
     df['Category_en'] = df['Category']
     df['Category_es'] = df['Category'].map({
