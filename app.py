@@ -223,7 +223,7 @@ def update_dropdowns(lang):
     Input('language-select', 'value')
 )
 def update_chart(dataset_key, dimension_key, lang):
-    df = datasets[dataset_key]
+    df = dfS[dataset_key]
     df = df[df['Type 2'] == dimension_key].copy()
     df['Percentage'] = df['Value'] * 100
 
