@@ -3,7 +3,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 import os
 import json
 
-# Use gspread to access Google Sheets
+key_dict = json.loads(os.environ["GOOGLE_CREDS"])
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 creds = ServiceAccountCredentials.from_json_keyfile_name(key_dict, scope)
 client = gspread.authorize(creds)
