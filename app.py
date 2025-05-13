@@ -3,16 +3,10 @@ from oauth2client.service_account import ServiceAccountCredentials
 import os
 import json
 
-# Write the credentials to a temp file
-credentials_path = "/tmp/google_credentials.json"
-with open(credentials_path, "w") as f:
-    f.write(os.getenv("GOOGLE_CREDS"))
-
 # Use gspread to access Google Sheets
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name(credentials_path, scope)
+creds = ServiceAccountCredentials.from_json_keyfile_name(key_dict, scope)
 client = gspread.authorize(creds)
-
 
 # # Setup
 
