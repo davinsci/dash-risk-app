@@ -118,7 +118,8 @@ DZ9 = dfZ["D9"].reset_index().copy()
 
 # DASH D Plot
 
-for name, df in dfS.items():
+# Full translation attempt
+for name, df in datasets.items():
 # Translated columns
     df['Category_en'] = df['Category']
     df['Category_es'] = df['Category'].map({
@@ -222,7 +223,7 @@ def update_dropdowns(lang):
     Input('language-select', 'value')
 )
 def update_chart(dataset_key, dimension_key, lang):
-    df = dfS[dataset_key]
+    df = datasets[dataset_key]
     df = df[df['Type 2'] == dimension_key].copy()
     df['Percentage'] = df['Value'] * 100
 
@@ -234,7 +235,7 @@ def update_chart(dataset_key, dimension_key, lang):
     vi_labels = [df[f'VI_{lang}'][df['VI'] == vi].iloc[0] for vi in vi_order]
     color_map = {df[f'VI_{lang}'][df['VI'] == vi].iloc[0]: vi_colors[vi] for vi in vi_order}
 
-    fig1 = px.bar(
+    fig = px.bar(
         df,
         x=x_column,
         y='Percentage',
@@ -244,7 +245,7 @@ def update_chart(dataset_key, dimension_key, lang):
         text=df['Percentage'].round(1).astype(str) + '%'
     )
 
-    fig1.update_layout(
+    fig.update_layout(
         barmode='stack',
         yaxis=dict(
             title=translations[lang]['yaxis'],
@@ -265,7 +266,7 @@ def update_chart(dataset_key, dimension_key, lang):
         uniformtext_mode='hide'
     )
 
-    return fig1, translations[lang]['title']
+    return fig, translations[lang]['title']
 
 if __name__ == '__main__':
     app.run_server(debug=False, port=8080, host='0.0.0.0')
