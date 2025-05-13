@@ -74,11 +74,11 @@ dfP1 = dfP1.rename(columns=rename_map, errors='ignore')
 dfP2 = dfP2.rename(columns=rename_map, errors='ignore')
 
 dfP1 = dfP1.melt(id_vars=Cats, var_name='Category', value_name='Value')
-dfP1['Value'] = dfP1['Value'].astype(float)
+#dfP1['Value'] = dfP1['Value'].astype(float)
 dfP1['Category'] = dfP1['Category'].astype('category')
 
 dfP2 = dfP2.melt(id_vars=Cats, var_name='Category', value_name='Value')
-dfP2['Value'] = dfP2['Value'].astype(float)
+#dfP2['Value'] = dfP2['Value'].astype(float)
 dfP2['Category'] = dfP2['Category'].astype('category')
 
 
