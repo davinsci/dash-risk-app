@@ -4,7 +4,7 @@ import os
 import json
 
 key_dict = "/tmp/google_creds.json"
-with open(credentials_path, "w") as f:
+with open(key_dict, "w") as f:
     f.write(os.getenv("GOOGLE_CREDS"))
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 creds = ServiceAccountCredentials.from_json_keyfile_name(key_dict, scope)
