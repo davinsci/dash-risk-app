@@ -256,7 +256,7 @@ def update_chart(dataset_key, dimension_key, lang):
         color=color_column,
         category_orders={color_column: vi_labels},
         color_discrete_map=color_map,
-            text=df['Percent'].round(1)#.astype(str) + '%'
+            text=df['Percent'].round(1)
     )
 
     fig.update_layout(
@@ -271,9 +271,9 @@ def update_chart(dataset_key, dimension_key, lang):
             x=0.5
         ),
         font=dict(
-        family="Avenir Book",  # Set font family here
-        size=14,               # Optional: adjust font size
-        color='black'          # Optional: adjust font color
+        family="Avenir Book",
+        size=14,
+        color='black'
         ),
         legend_title_text='',
         uniformtext_minsize=8,
