@@ -34,14 +34,19 @@ dfP = pd.DataFrame(wsP.get_all_records())
 
 # # Dataframe Setup
 
-Cats = ['SI', 'Index', 'Index 2', 'Type 2', 'VI']
-Pera = ['SI', 'Index', 'Index 2', 'Type 2', 'VI',
-         'ALL %', 'Ml %', 'Fl %', 'A %', 'M A %', 'F A %', 'J %', 'M J %', 'F J %', 'O %', 'M O %', 'F O %', 'M %', 'M M %', 'F M %']
-Perz = ['SI', 'Index', 'Index 2', 'Type 2', 'VI', 'ALL %',
-        'Z1 %', 'Z1 Ml %', 'Z1 Fl %', 'Z1 A %', 'Z1 J %', 'Z1 O %', 'Z1 M %', 'Z2 %', 'Z2 Ml %', 'Z2 Fl %', 'Z2 A %', 'Z2 J %', 'Z2 O %', 'Z2 M %', 
-        'Z3 %', 'Z3 Ml %', 'Z3 Fl %', 'Z3 A %', 'Z3 J %', 'Z3 O %', 'Z3 M %', 'Z4 %', 'Z4 Ml %', 'Z4 Fl %', 'Z4 A %', 'Z4 J %', 'Z4 O %', 'Z4 M %' 
+Pera = [ 'Index','Type 2','VI',
+         'ALL %', 'Ml %', 'Fl %',
+         'A %', 'M A %', 'F A %', 
+         'J %', 'M J %', 'F J %', 
+         'O %', 'M O %', 'F O %', 
+         'M %', 'M M %', 'F M %', 
+         ]
+Perz = ['Index','Type 2','VI', 'ALL %',
+        'Z1 %', 'Z1 Ml %', 'Z1 Fl %', 'Z1 A %', 'Z1 J %', 'Z1 O %', 'Z1 M %', 
+        'Z2 %', 'Z2 Ml %', 'Z2 Fl %', 'Z2 A %', 'Z2 J %', 'Z2 O %', 'Z2 M %', 
+        'Z3 %', 'Z3 Ml %', 'Z3 Fl %', 'Z3 A %', 'Z3 J %', 'Z3 O %', 'Z3 M %', 
+        'Z4 %', 'Z4 Ml %', 'Z4 Fl %', 'Z4 A %', 'Z4 J %', 'Z4 O %', 'Z4 M %' 
         ]
-
 dfP1 = dfP[Pera]
 dfP2 = dfP[Perz]
 
@@ -73,53 +78,62 @@ dfP = dfP.rename(columns=rename_map, errors='ignore')
 dfP1 = dfP1.rename(columns=rename_map, errors='ignore')
 dfP2 = dfP2.rename(columns=rename_map, errors='ignore')
 
-dfP1 = dfP1.melt(id_vars=Cats, var_name='Category', value_name='Value')
-#dfP1['Value'] = dfP1['Value'].astype(float)
+dfP1 = dfP1.melt(id_vars=['Index','Type 2','VI'], var_name='Category', value_name='Value')
 dfP1['Category'] = dfP1['Category'].astype('category')
 
-dfP2 = dfP2.melt(id_vars=Cats, var_name='Category', value_name='Value')
-#dfP2['Value'] = dfP2['Value'].astype(float)
+dfP2 = dfP2.melt(id_vars=['Index','Type 2','VI'], var_name='Category', value_name='Value')
 dfP2['Category'] = dfP2['Category'].astype('category')
 
 
 # Dataset Configuration
 
-dfS = {}
+datasets = {}
 
 for index_value in dfP1["Index"].unique():
-    dfS[index_value] = dfP1[dfP1["Index"] == index_value]
+    datasets[index_value] = dfP1[dfP1["Index"] == index_value]
 
-D1 = dfS["D1"].reset_index().copy()
-D2 = dfS["D2"].reset_index().copy()
-D3 = dfS["D3"].reset_index().copy()
-D4 = dfS["D4"].reset_index().copy()
-D5 = dfS["D5"].reset_index().copy()
-D6 = dfS["D6"].reset_index().copy()
-D7 = dfS["D7"].reset_index().copy()
-D8 = dfS["D8"].reset_index().copy()
-D9 = dfS["D9"].reset_index().copy()
+D1 = datasets["D1"].reset_index().copy()
+D2 = datasets["D2"].reset_index().copy()
+D3 = datasets["D3"].reset_index().copy()
+D4 = datasets["D4"].reset_index().copy()
+D5 = datasets["D5"].reset_index().copy()
+D6 = datasets["D6"].reset_index().copy()
+D7 = datasets["D7"].reset_index().copy()
+D8 = datasets["D8"].reset_index().copy()
+D9 = datasets["D9"].reset_index().copy()
 
 
-dfZ = {}
+datasetz = {}
 
 for index_value in dfP2["Index"].unique():
-    dfZ[index_value] = dfP2[dfP2["Index"] == index_value]
+    datasetz[index_value] = dfP2[dfP2["Index"] == index_value]
 
-DZ1 = dfZ["D1"].reset_index().copy()
-DZ2 = dfZ["D2"].reset_index().copy()
-DZ3 = dfZ["D3"].reset_index().copy()
-DZ4 = dfZ["D4"].reset_index().copy()
-DZ5 = dfZ["D5"].reset_index().copy()
-DZ6 = dfZ["D6"].reset_index().copy()
-DZ7 = dfZ["D7"].reset_index().copy()
-DZ8 = dfZ["D8"].reset_index().copy()
-DZ9 = dfZ["D9"].reset_index().copy()
+DZ1 = datasetz["D1"].reset_index().copy()
+DZ2 = datasetz["D2"].reset_index().copy()
+DZ3 = datasetz["D3"].reset_index().copy()
+DZ4 = datasetz["D4"].reset_index().copy()
+DZ5 = datasetz["D5"].reset_index().copy()
+DZ6 = datasetz["D6"].reset_index().copy()
+DZ7 = datasetz["D7"].reset_index().copy()
+DZ8 = datasetz["D8"].reset_index().copy()
+DZ9 = datasetz["D9"].reset_index().copy()
 
+datasets = {
+    'D1': D1,
+    'D2': D2,
+    'D3': D3,
+    'D4': D4,
+    'D5': D5,
+    'D6': D6,
+    'D7': D7,
+    'D8': D8,
+    'D9': D9
+}
 
 # DASH D Plot
 
 # Full translation attempt
-for name, df in dfS.items():
+for name, df in datasets.items():
 # Translated columns
     df['Category_en'] = df['Category']
     df['Category_es'] = df['Category'].map({
@@ -223,9 +237,9 @@ def update_dropdowns(lang):
     Input('language-select', 'value')
 )
 def update_chart(dataset_key, dimension_key, lang):
-    df = dfS[dataset_key]
+    df = datasets[dataset_key]
     df = df[df['Type 2'] == dimension_key].copy()
-    df['Percentage'] = df['Value'] * 100
+    df['Percent'] = df['Value'] * 100
 
     # Use translated columns
     x_column = 'Category_' + lang
@@ -238,11 +252,11 @@ def update_chart(dataset_key, dimension_key, lang):
     fig = px.bar(
         df,
         x=x_column,
-        y='Percentage',
+        y='Percent',
         color=color_column,
         category_orders={color_column: vi_labels},
         color_discrete_map=color_map,
-        text=df['Percentage'].round(1).astype(str) + '%'
+            text=df['Percent'].round(1).astype(str) + '%'
     )
 
     fig.update_layout(
