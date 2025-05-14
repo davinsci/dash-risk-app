@@ -247,8 +247,10 @@ def update_chart(dataset_key, dimension_key, lang):
     color_column = 'VI_' + lang
 
     # Build legend order and color map in target language
-    vi_labels = [df[f'VI_{lang}'][df['VI'] == vi].iloc[0] for vi in vi_order]
-    color_map = {df[f'VI_{lang}'][df['VI'] == vi].iloc[0]: vi_colors[vi] for vi in vi_order}
+    vi_labels = {translations[lang]['vi'][vi] for vi in vi_order}
+    # vi_labels = [df[f'VI_{lang}'][df['VI'] == vi].iloc[0] for vi in vi_order]
+    color_map = {translations[lang]['vi'][vi]: vi_colors[vi] for vi in vi_order}
+    # color_map = {df[f'VI_{lang}'][df['VI'] == vi].iloc[0]: vi_colors[vi] for vi in vi_order}
 
     fig = px.bar(
         df,
