@@ -241,7 +241,7 @@ def update_chart(dataset_key, dimension_key, lang):
     df = datasets[dataset_key]
     df = df[df['Type 2'] == dimension_key].copy()
     df['Percent'] = df['Value'] * 100
-    df['Percent'] = pd.to_numeric(df['Percent'], errors='coerce')
+    # df['Percent'] = pd.to_numeric(df['Percent'], errors='coerce')
 
     # Use translated columns
     x_column = 'Category_' + lang
