@@ -256,7 +256,7 @@ def update_chart(dataset_key, dimension_key, lang):
         color=color_column,
         category_orders={color_column: vi_labels},
         color_discrete_map=color_map,
-            text=df['Percent'].round(1).astype(str) + '%'
+            text=df['Percent'].round(1)#.astype(str) + '%'
     )
 
     fig.update_layout(
