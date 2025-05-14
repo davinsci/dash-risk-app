@@ -22,7 +22,7 @@ import pandas as pd
 import numpy as np
 
 # Open the Google Sheet by its URL or name
-HSI = client.open_by_url("https://docs.google.com/spreadsheets/d/1D5V-B51Van2Vt1frrM8xkMyI9_3t-r26YFkuxv-B67M/edit")
+HSI = client.open_by_url("https://docs.google.com/spreadsheets/d/1D5V-B51Van2Vt1frrM8xkMyI9_3t-r26YFkuxv-B67M")
                          
 # Select a worksheet (e.g., the first sheet)
 wsP = HSI.worksheet('P8')
