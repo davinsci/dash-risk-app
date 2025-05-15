@@ -123,6 +123,7 @@ vi_colors = {'Extreme': 'red', 'High': 'orange', 'Medium': 'yellow', 'Low': 'gre
 
 # DASH Bar Plot - By Age & Gender
 app = dash.Dash(__name__)
+server = app.server
 
 app.layout = html.Div([
     html.H2(id='chart-title', style={'textAlign': 'center', 'fontFamily': 'Avenir Book'}),
