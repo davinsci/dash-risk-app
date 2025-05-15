@@ -21,19 +21,11 @@ from plotly.subplots import make_subplots
 import pandas as pd
 import numpy as np
 
-# Open the Google Sheet by its URL or name
+# Access Google Sheet
 HSI = client.open_by_url("https://docs.google.com/spreadsheets/d/1D5V-B51Van2Vt1frrM8xkMyI9_3t-r26YFkuxv-B67M")
-                         
-# Select a worksheet (e.g., the first sheet)
-wsP = HSI.worksheet('P8')
-#wsW = HSI.worksheet('W3')
+dfP = pd.DataFrame(HSI.worksheet('P8').get_all_records())
 
-# Convert to a Pandas DataFrame
-dfP = pd.DataFrame(wsP.get_all_records())
-#dfW = pd.DataFrame(wsW.get_all_records())
-
-# # Dataframe Setup
-
+# Dataframe Setup
 Pera = [ 'Index','Type 2','VI',
          'ALL %', 'Ml %', 'Fl %',
          'A %', 'M A %', 'F A %', 
@@ -41,84 +33,36 @@ Pera = [ 'Index','Type 2','VI',
          'O %', 'M O %', 'F O %', 
          'M %', 'M M %', 'F M %', 
          ]
-Perz = ['Index','Type 2','VI', 'ALL %',
-        'Z1 %', 'Z1 Ml %', 'Z1 Fl %', 'Z1 A %', 'Z1 J %', 'Z1 O %', 'Z1 M %', 
-        'Z2 %', 'Z2 Ml %', 'Z2 Fl %', 'Z2 A %', 'Z2 J %', 'Z2 O %', 'Z2 M %', 
-        'Z3 %', 'Z3 Ml %', 'Z3 Fl %', 'Z3 A %', 'Z3 J %', 'Z3 O %', 'Z3 M %', 
-        'Z4 %', 'Z4 Ml %', 'Z4 Fl %', 'Z4 A %', 'Z4 J %', 'Z4 O %', 'Z4 M %' 
-        ]
 dfP1 = dfP[Pera]
-dfP2 = dfP[Perz]
 
-# Column renaming mapping
+# Column mapping
 rename_map = {
-    'A': 'Age 15-19', 'J': 'Age 20-29', 'O': 'Age 30-59', 'M': 'Age 60+', 
-    'M A': 'Male(15-19)', 'M J': 'Male(20-29)', 'M O': 'Male(30-59)', 'M M': 'Male(60+)', 
-    'F A': 'Female(15-19)', 'F J': 'Female(20-29)', 'F O': 'Female(30-59)', 'F M': 'Female(60+)', 
-    'Ml': 'Male', 'Fl': 'Female',  'Z1': 'Zone 1', 'Z2': 'Zone 2', 'Z3': 'Zone 3', 'Z4': 'Zone 4', 
-    'A %': 'Age 15-19 %', 'J %': 'Age 20-29 %', 'O %': 'Age 30-59 %', 'M %': 'Age 60+ %', 
-    'M A %': 'Male(15-19) %', 'M J %': 'Male(20-29) %', 'M O %': 'Male(30-59) %', 'M M %': 'Male(60+) %', 
-    'F A %': 'Female(15-19) %', 'F J %': 'Female(20-29) %', 'F O %': 'Female(30-59) %', 'F M %': 'Female(60+) %', 
-    'Ml %': 'Male %', 'Fl %': 'Female %',  'Z1 %': 'Zone 1 %', 'Z2 %': 'Zone 2 %', 'Z3 %': 'Zone 3 %', 'Z4 %': 'Zone 4 %', 
-    'Z1 A':'Zone 1 Age 15-19', 'Z1 A %':'Zone 1 Age 15-19 %', 'Z2 A':'Zone 2 Age 15-19', 'Z2 A %':'Zone 2 Age 15-19 %', 
-    'Z3 A':'Zone 3 Age 15-19', 'Z3 A %':'Zone 3 Age 15-19 %', 'Z4 A':'Zone 4 Age 15-19', 'Z4 A %':'Zone 4 Age 15-19 %', 
-    'Z1 J':'Zone 1 Age 20-29', 'Z1 J %':'Zone 1 Age 20-29 %', 'Z2 J':'Zone 2 Age 20-29', 'Z2 J %':'Zone 2 Age 20-29 %', 
-    'Z3 J':'Zone 3 Age 20-29', 'Z3 J %':'Zone 3 Age 20-29 %', 'Z4 J':'Zone 4 Age 20-29', 'Z4 J %':'Zone 4 Age 20-29 %', 
-    'Z1 O':'Zone 1 Age 30-59', 'Z1 O %':'Zone 1 Age 30-59 %', 'Z2 O':'Zone 2 Age 30-59', 'Z2 O %':'Zone 2 Age 30-59 %', 
-    'Z3 O':'Zone 3 Age 30-59', 'Z3 O %':'Zone 3 Age 30-59 %', 'Z4 O':'Zone 4 Age 30-59', 'Z4 O %':'Zone 4 Age 30-59 %', 
-    'Z1 M':'Zone 1 Age 60+', 'Z1 M %':'Zone 1 Age 60+ %', 'Z2 M':'Zone 2 Age 60+', 'Z2 M %':'Zone 2 Age 60+ %', 
-    'Z3 M':'Zone 3 Age 60+', 'Z3 M %':'Zone 3 Age 60+ %', 'Z4 M':'Zone 4 Age 60+', 'Z4 M %':'Zone 4 Age 60+ %', 
-    'Z1 Ml':'Zone 1 Male', 'Z1 Ml %':'Zone 1 Male %', 'Z2 Ml':'Zone 2 Male', 'Z2 Ml %':'Zone 2 Male %', 
-    'Z3 Ml':'Zone 3 Male', 'Z3 Ml %':'Zone 3 Male %', 'Z4 Ml':'Zone 4 Male', 'Z4 Ml %':'Zone 4 Male %', 
-    'Z1 Fl':'Zone 1 Female', 'Z1 Fl %':'Zone 1 Female %', 'Z2 Fl':'Zone 2 Female', 'Z2 Fl %':'Zone 2 Female %', 
-    'Z3 Fl':'Zone 3 Female', 'Z3 Fl %':'Zone 3 Female %', 'Z4 Fl':'Zone 4 Female', 'Z4 Fl %':'Zone 4 Female %'
+    'ALL %': 'ALL', 'A %': 'Age 15-19', 'J %': 'Age 20-29', 'O %': 'Age 30-59', 'M %': 'Age 60+', 
+    'M A %': 'Male(15-19)', 'M J %': 'Male(20-29)', 'M O %': 'Male(30-59)', 'M M %': 'Male(60+)', 
+    'F A %': 'Female(15-19)', 'F J %': 'Female(20-29)', 'F O %': 'Female(30-59)', 'F M %': 'Female(60+)', 
+    'Ml %': 'Male', 'Fl %': 'Female'
 }
-
-dfP = dfP.rename(columns=rename_map, errors='ignore')
 dfP1 = dfP1.rename(columns=rename_map, errors='ignore')
-dfP2 = dfP2.rename(columns=rename_map, errors='ignore')
-
 dfP1 = dfP1.melt(id_vars=['Index','Type 2','VI'], var_name='Category', value_name='Value')
 dfP1['Category'] = dfP1['Category'].astype('category')
 
-dfP2 = dfP2.melt(id_vars=['Index','Type 2','VI'], var_name='Category', value_name='Value')
-dfP2['Category'] = dfP2['Category'].astype('category')
-
-
 # Dataset Configuration
-
-datasets = {}
+dimensions = {}
 
 for index_value in dfP1["Index"].unique():
-    datasets[index_value] = dfP1[dfP1["Index"] == index_value]
+    dimensions[index_value] = dfP1[dfP1["Index"] == index_value]
 
-D1 = datasets["D1"].reset_index().copy()
-D2 = datasets["D2"].reset_index().copy()
-D3 = datasets["D3"].reset_index().copy()
-D4 = datasets["D4"].reset_index().copy()
-D5 = datasets["D5"].reset_index().copy()
-D6 = datasets["D6"].reset_index().copy()
-D7 = datasets["D7"].reset_index().copy()
-D8 = datasets["D8"].reset_index().copy()
-D9 = datasets["D9"].reset_index().copy()
+D1 = dimensions["D1"].reset_index().copy()
+D2 = dimensions["D2"].reset_index().copy()
+D3 = dimensions["D3"].reset_index().copy()
+D4 = dimensions["D4"].reset_index().copy()
+D5 = dimensions["D5"].reset_index().copy()
+D6 = dimensions["D6"].reset_index().copy()
+D7 = dimensions["D7"].reset_index().copy()
+D8 = dimensions["D8"].reset_index().copy()
+D9 = dimensions["D9"].reset_index().copy()
 
-
-datasetz = {}
-
-for index_value in dfP2["Index"].unique():
-    datasetz[index_value] = dfP2[dfP2["Index"] == index_value]
-
-DZ1 = datasetz["D1"].reset_index().copy()
-DZ2 = datasetz["D2"].reset_index().copy()
-DZ3 = datasetz["D3"].reset_index().copy()
-DZ4 = datasetz["D4"].reset_index().copy()
-DZ5 = datasetz["D5"].reset_index().copy()
-DZ6 = datasetz["D6"].reset_index().copy()
-DZ7 = datasetz["D7"].reset_index().copy()
-DZ8 = datasetz["D8"].reset_index().copy()
-DZ9 = datasetz["D9"].reset_index().copy()
-
-datasets = {
+dimensions = {
     'D1': D1,
     'D2': D2,
     'D3': D3,
@@ -130,46 +74,43 @@ datasets = {
     'D9': D9
 }
 
-# DASH D Plot
-
-# Full translation attempt
-for name, df in datasets.items():
 # Translated columns
-    df['Category_en'] = df['Category']
-    df['Category_es'] = df['Category'].map({
-            'ALL %':'TODO %',
-            'Age 15-19 %': 'Edad 15-19 %','Age 20-29 %': 'Edad 20-29 %','Age 30-59 %': 'Edad 30-59 %','Age 60+ %': 'Edad 60+ %',
-            'Male %': 'Hombre %','Female %': 'Mujer %',
-            'Male(15-19) %': 'Hombre(15-19) %','Male(20-29) %': 'Hombre(20-29) %',
-            'Male(30-59) %': 'Hombre(30-59) %','Male(60+) %': 'Hombre(60+) %',
-            'Female(15-19) %': 'Mujer(15-19) %','Female(20-29) %': 'Mujer(20-29) %',
-            'Female(30-59) %': 'Mujer(30-59) %','Female(60+) %': 'Mujer(60+) %',
+for name, df in dimensions.items():
+    df['Category (EN)'] = df['Category']
+    df['Category (ES)'] = df['Category'].map({
+            'ALL':'TODO',
+            'Age 15-19': 'Edad 15-19','Age 20-29': 'Edad 20-29','Age 30-59': 'Edad 30-59','Age 60+': 'Edad 60+',
+            'Male': 'Hombre','Female': 'Mujer',
+            'Male(15-19)': 'Hombre(15-19)','Male(20-29)': 'Hombre(20-29)',
+            'Male(30-59)': 'Hombre(30-59)','Male(60+)': 'Hombre(60+)',
+            'Female(15-19)': 'Mujer(15-19)','Female(20-29)': 'Mujer(20-29)',
+            'Female(30-59)': 'Mujer(30-59)','Female(60+)': 'Mujer(60+)',
     })
 
-    df['VI_en'] = df['VI']
-    df['VI_es'] = df['VI'].map({
+    df['VI (EN)'] = df['VI']
+    df['VI (ES)'] = df['VI'].map({
         'Extreme': 'Extremo', 'High': 'Alto', 'Medium': 'Medio', 'Low': 'Bajo'
     })
     
 translations = {
-    'en': {
-        'title': 'Category Risk Breakdown',
+    '(EN)': {
+        'title': 'Vulnerability Level per Dimension',
         'yaxis': 'Percentage',
-        'datasets': {'D1': 'Personal Security', 'D2': 'Economic Security', 'D3': 'Food Security', 
+        'dimensions': {'D1': 'Personal Security', 'D2': 'Economic Security', 'D3': 'Food Security', 
                      'D4': 'Health Security', 'D5': 'Political Security', 'D6': 'Community Security', 
                      'D7': 'Environmental Security', 'D8': 'Ontological Security', 'D9': 'Technological Security'},
-        'type2': {
+        'components': {
             'Average': 'Average', 'Exposure': 'Exposure',
             'Protection': 'Protection', 'Rights': 'Rights'
         }
     },
-    'es': {
-        'title': 'Distribución del Riesgo por Categoría',
+    '(ES)': {
+        'title': 'Nivel de vulnerabilidad por dimensión',
         'yaxis': 'Porcentaje',
-        'datasets': {'D1': 'Seguridad Personal', 'D2': 'Seguridad Económica', 'D3': 'Seguridad Alimentaria', 
+        'dimensions': {'D1': 'Seguridad Personal', 'D2': 'Seguridad Económica', 'D3': 'Seguridad Alimentaria', 
                      'D4': 'Seguridad Sanitaria', 'D5': 'Seguridad Política', 'D6': 'Seguridad Comunitaria', 
                      'D7': 'Seguridad Ambiental', 'D8': 'Seguridad Ontológica', 'D9': 'Seguridad Tecnológica'},
-        'type2': {
+        'components': {
             'Average': 'Promedio', 'Exposure': 'Exposición',
             'Protection': 'Protección', 'Rights': 'Derechos'
         }
@@ -179,28 +120,28 @@ translations = {
 vi_order = ['Extreme', 'High', 'Medium', 'Low']
 vi_colors = {'Extreme': 'red', 'High': 'orange', 'Medium': 'yellow', 'Low': 'green'}
 
-# Dash App
+
+# DASH Bar Plot - By Age & Gender
 app = dash.Dash(__name__)
-server = app.server
 
 app.layout = html.Div([
     html.H2(id='chart-title', style={'textAlign': 'center', 'fontFamily': 'Avenir Book'}),
 
     html.Div([
-        html.Label('Dataset:', style={'fontFamily': 'Avenir Book'}),
-        dcc.Dropdown(id='dataset-select', style={'fontFamily': 'Avenir Book'}),
-
         html.Label('Dimension:', style={'fontFamily': 'Avenir Book'}),
         dcc.Dropdown(id='dimension-select', style={'fontFamily': 'Avenir Book'}),
+
+        html.Label('Component:', style={'fontFamily': 'Avenir Book'}),
+        dcc.Dropdown(id='component-select', style={'fontFamily': 'Avenir Book'}),
 
         html.Label('Language:', style={'fontFamily': 'Avenir Book'}),
         dcc.RadioItems(
         id='language-select',
         options=[
-        {'label': 'English', 'value': 'en'},
-        {'label': 'Español', 'value': 'es'}
+        {'label': 'English', 'value': '(EN)'},
+        {'label': 'Español', 'value': '(ES)'}
         ],
-        value='en',
+        value='(EN)',
         labelStyle={
         'display': 'inline-block',
         'padding': '6px 12px',
@@ -219,48 +160,48 @@ app.layout = html.Div([
 ], style={'fontFamily': 'Avenir Book'})
 
 @app.callback(
-    Output('dataset-select', 'options'),
-    Output('dataset-select', 'value'),
     Output('dimension-select', 'options'),
     Output('dimension-select', 'value'),
+    Output('component-select', 'options'),
+    Output('component-select', 'value'),
     Input('language-select', 'value')
 )
 def update_dropdowns(lang):
-    dataset_options = [{'label': translations[lang]['datasets'][k], 'value': k} for k in datasets.keys()]
-    dimension_options = [{'label': translations[lang]['type2'][k], 'value': k} for k in ['Average', 'Exposure', 'Protection', 'Rights']]
-    return dataset_options, 'D1', dimension_options, 'Average'
+    dimension_options = [{'label': translations[lang]['dimensions'][k], 'value': k} for k in dimensions.keys()]
+    component_options = [{'label': translations[lang]['components'][k], 'value': k} for k in ['Average', 'Exposure', 'Protection', 'Rights']]
+    return dimension_options, 'D1', component_options, 'Average'
 
 @app.callback(
     Output('bar-chart', 'figure'),
     Output('chart-title', 'children'),
-    Input('dataset-select', 'value'),
     Input('dimension-select', 'value'),
+    Input('component-select', 'value'),
     Input('language-select', 'value')
 )
-def update_chart(dataset_key, dimension_key, lang):
-    df = datasets[dataset_key]
-    df = df[df['Type 2'] == dimension_key].copy()
-    df['Percent'] = df['Value'] * 100
-    # df['Percent'] = pd.to_numeric(df['Percent'], errors='coerce')
+def update_chart(dimension_key, component_key, lang):
+    df = dimensions[dimension_key]
+    df = df[df['Type 2'] == component_key].copy()
+    df['Percentage'] = df['Value'] * 100
+#    df['Percentage'] = pd.to_numeric(df['Percentage'], errors='coerce')
 
     # Use translated columns
-    x_column = 'Category_' + lang
-    color_column = 'VI_' + lang
+    x_column = 'Category ' + lang
+    color_column = 'VI ' + lang
 
     # Build legend order and color map in target language
-    # vi_labels = {translations[lang]['vi'][vi] for vi in vi_order}
-    vi_labels = [df[f'VI_{lang}'][df['VI'] == vi].iloc[0] for vi in vi_order]
-    # color_map = {translations[lang]['vi'][vi]: vi_colors[vi] for vi in vi_order}
-    color_map = {df[f'VI_{lang}'][df['VI'] == vi].iloc[0]: vi_colors[vi] for vi in vi_order}
+    # vi_labels = {translations[lang]['VI'][vi] for vi in vi_order}
+    vi_labels = [df[f'VI {lang}'][df['VI'] == vi].iloc[0] for vi in vi_order]
+    # color_map = {translations[lang]['VI'][vi]: vi_colors[vi] for vi in vi_order}
+    color_map = {df[f'VI {lang}'][df['VI'] == vi].iloc[0]: vi_colors[vi] for vi in vi_order}
 
     fig = px.bar(
         df,
         x=x_column,
-        y='Percent',
+        y='Percentage',
         color=color_column,
         category_orders={color_column: vi_labels},
         color_discrete_map=color_map,
-            text=df['Percent'].round(1).astype(str) + '%'
+            text=df['Percentage'].round(1).astype(str) + '%'
     )
 
     fig.update_layout(
@@ -271,7 +212,7 @@ def update_chart(dataset_key, dimension_key, lang):
             ticksuffix='%'
         ),
         title=dict(
-            text=f"{translations[lang]['title']} – {translations[lang]['type2'][dimension_key]} ({translations[lang]['datasets'][dataset_key]})",
+            text=f"{translations[lang]['title']} – {translations[lang]['components'][component_key]} ({translations[lang]['dimensions'][dimension_key]})",
             x=0.5
         ),
         font=dict(
