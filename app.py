@@ -183,16 +183,13 @@ def update_chart(dimension_key, component_key, lang):
     df = dimensions[dimension_key]
     df = df[df['Type 2'] == component_key].copy()
     df['Percentage'] = df['Value'] * 100
-#    df['Percentage'] = pd.to_numeric(df['Percentage'], errors='coerce')
 
-    # Use translated columns
+    # Using translated columns
     x_column = 'Category ' + lang
     color_column = 'VI ' + lang
 
-    # Build legend order and color map in target language
-    # vi_labels = {translations[lang]['VI'][vi] for vi in vi_order}
+    # Building legend order and color map
     vi_labels = [df[f'VI {lang}'][df['VI'] == vi].iloc[0] for vi in vi_order]
-    # color_map = {translations[lang]['VI'][vi]: vi_colors[vi] for vi in vi_order}
     color_map = {df[f'VI {lang}'][df['VI'] == vi].iloc[0]: vi_colors[vi] for vi in vi_order}
 
     fig = px.bar(
