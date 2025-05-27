@@ -89,7 +89,20 @@ for name, df in dimensions.items():
 
     df['VI (EN)'] = df['VI']
     df['VI (ES)'] = df['VI'].map({
-        'Extreme': 'Extremo', 'High': 'Alto', 'Medium': 'Medio', 'Low': 'Bajo'
+        'Extreme': 'Extrema', 'High': 'Alta', 'Medium': 'Media', 'Low': 'Baja'
+    })
+    
+    df['VI_desc (EN)'] = df['VI (EN)'].map({
+        'Extreme': 'High number of threats, lacks effective means to protect themselves.',
+        'High': 'Exposed to multiple risk factors, limited access to protection mechanisms.',
+        'Medium': 'Some threat factors present, but partial access to means to mitigate them.',
+        'Low': 'Certain risks may exist, but threats are neither imminent nor severe.'
+    })
+    df['VI_desc (ES)'] = df['VI (EN)'].map({
+        'Extreme': 'Gran cantidad de amenazas, no cuenta con medios efectivas para protegerse.',
+        'High': 'Expuesta a varios factores de riesgo, acceso limitado a mecanismos de protección.',
+        'Medium': 'Algunos factores de amenaza, pero acceso parcial a medios mitigar dichas amenazas.',
+        'Low': 'Existir ciertos riesgos, pero las amenazas no son inminentes o severas.'
     })
     
 translations = {
@@ -120,6 +133,54 @@ translations = {
 vi_order = ['Extreme', 'High', 'Medium', 'Low']
 vi_colors = {'Extreme': 'red', 'High': 'orange', 'Medium': 'yellow', 'Low': 'green'}
 
+intro_descriptions = {
+    '(EN)': "The Glocal Human Security Index measures individuals' levels of vulnerability\
+        across nine dimensions by integrating the scores of three components: \
+        Exposure to Threats; Access to Protection Mechanisms; and Freedom to Exercise Rights.",
+    '(ES)': "El Índice Glocal de Seguridad Humana mide el nivel de vulnerabilidad \
+        de las personas en nueve dimensiones, integrando los puntajes de tres componentes:\
+        Exposición a Amenazas; Acceso a Mecanismos de Protección; y Libertad para Ejercer Derechos."
+}
+
+component_descriptions = {
+    '(EN)': {
+        'Average': 'An aggregate of all indicators across components.',
+        'Exposure': 'Exposure to threats: How exposed was the person to factors and situations that endangered their life, livelihood, or rights?',
+        'Protection': 'Access to protection mechanisms: How accessible and effective were the resources, services, or support systems to protect against or recover from those threats?',
+        'Rights': 'Freedom to exercise rights: To what extent was the person able to fully and freely exercise their rights without restrictions?'
+    },
+    '(ES)': {
+        'Average': 'Un promedio de todos los indicadores entre componentes.',
+        'Exposure': 'Exposición a amenazas: ¿Qué tan expuesta estuvo la persona a situaciones que ponen en riesgo su vida, sustento o derechos?',
+        'Protection': 'Acceso a mecanismos de protección: ¿Qué tan accesibles y eficaces fueron los recursos, servicios o apoyos para protegerse o recuperarse frente a esas amenazas?',
+        'Rights': 'Libertad para ejercer derechos: ¿Qué tanto margen tuvo la persona para ejercer sus derechos de manera plena y sin restricciones?'
+    }
+}
+
+dimension_descriptions = {
+    '(EN)': {
+        'D1': 'Protection from harm caused by any form of violence.', 
+        'D2': 'Protection of livelihoods.', 
+        'D3': 'Protection of reliable access to food and adequate nutrition.', 
+        'D4': 'Protection of physical and mental health and access to quality medical services.', 
+        'D5': 'Protection of fundamental rights, including the right to participate in public affairs.', 
+        'D6': 'Protection of peaceful coexistence among community members and their ability to function as support systems.', 
+        'D7': 'Protection from disasters, environmental threats, and hazardous conditions in the built environment.', 
+        'D8': "Protection of dignity and a person's sense of social relevance.", 
+        'D9': 'Protection from risks associated with technology use and access to its benefits.'
+    },
+    '(ES)': {
+        'D1': 'Protección frente a daños causados por cualquier forma de violencia.', 
+        'D2': 'Protección de los medios de vida', 
+        'D3': 'Protección del acceso confiable a alimentos y a una nutrición adecuada.', 
+        'D4': 'Protección de la salud mental y física y del acceso a servicios médicos de calidad.', 
+        'D5': 'Protección de los derechos fundamentales, incluido el derecho a participar en asuntos públicos.', 
+        'D6': 'Protección de la convivencia pacífica entre miembros de una comunidad y su capacidad para funcionar como sistemas de apoyo.', 
+        'D7': 'Protección frente a desastres, amenazas ambientales y condiciones peligrosas del entorno construido.', 
+        'D8': 'Protección de la dignidad y el sentido de relevancia social de las personas.', 
+        'D9': 'Protección frente a los riesgos derivados del uso de tecnologías y acceso a sus beneficios.'
+    }
+}
 
 # DASH Bar Plot - By Age & Gender
 app = dash.Dash(__name__)
@@ -128,12 +189,25 @@ server = app.server
 app.layout = html.Div([
     html.H2(id='chart-title', style={'textAlign': 'center', 'fontFamily': 'Avenir Book'}),
 
+    html.Div(id='intro-description', style={
+        'textAlign': 'center', 'fontFamily': 'Avenir Book',
+        'marginBottom': '10px', 'fontSize': '16px', 'fontStyle': 'italic'
+        }),
+
     html.Div([
         html.Label('Dimension:', style={'fontFamily': 'Avenir Book'}),
         dcc.Dropdown(id='dimension-select', style={'fontFamily': 'Avenir Book'}),
 
+        html.Div(id='dimension-description', style={
+        'marginBottom': '10px', 'fontSize': '16px', 'fontStyle': 'italic'
+        }),
+
         html.Label('Component:', style={'fontFamily': 'Avenir Book'}),
         dcc.Dropdown(id='component-select', style={'fontFamily': 'Avenir Book'}),
+
+        html.Div(id='component-description', style={
+        'marginBottom': '10px', 'fontSize': '16px', 'fontStyle': 'italic'
+        }),
 
         html.Label('Language:', style={'fontFamily': 'Avenir Book'}),
         dcc.RadioItems(
@@ -175,6 +249,9 @@ def update_dropdowns(lang):
 @app.callback(
     Output('bar-chart', 'figure'),
     Output('chart-title', 'children'),
+    Output('dimension-description', 'children'),
+    Output('component-description', 'children'),
+    Output('intro-description', 'children'),
     Input('dimension-select', 'value'),
     Input('component-select', 'value'),
     Input('language-select', 'value')
@@ -183,6 +260,8 @@ def update_chart(dimension_key, component_key, lang):
     df = dimensions[dimension_key]
     df = df[df['Type 2'] == component_key].copy()
     df['Percentage'] = df['Value'] * 100
+    df['VI_desc'] = df[f'VI_desc {lang}']
+    df['VI_hover'] = df[f'VI {lang}'] + '<br>' + df['VI_desc']
 
     # Using translated columns
     x_column = 'Category ' + lang
@@ -199,8 +278,13 @@ def update_chart(dimension_key, component_key, lang):
         color=color_column,
         category_orders={color_column: vi_labels},
         color_discrete_map=color_map,
-            text=df['Percentage'].round(1).astype(str) + '%'
+            text=df['Percentage'].round(1).astype(str) + '%',
+        custom_data=['VI_hover'],
+        hover_data=[]
     )
+
+    fig.update_traces(
+        hovertemplate='<b>%{x}<br>%{y}</b><br>%{customdata[0]}<extra></extra>')
 
     fig.update_layout(
         barmode='stack',
@@ -223,7 +307,11 @@ def update_chart(dimension_key, component_key, lang):
         uniformtext_mode='hide'
     )
 
-    return fig, translations[lang]['title']
+    description = dimension_descriptions[lang][dimension_key]
+    cescription = component_descriptions[lang][component_key]
+    intro_text = intro_descriptions[lang]
+
+    return fig, translations[lang]['title'], description, cescription, intro_text
 
 if __name__ == '__main__':
     app.run_server(debug=False, port=8000, host='0.0.0.0')
