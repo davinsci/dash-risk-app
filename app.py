@@ -294,7 +294,7 @@ def update_chart(dimension_key, component_key, lang):
             ticksuffix='%'
         ),
         title=dict(
-            text=f"{translations[lang]['title']} – {translations[lang]['components'][component_key]} ({translations[lang]['dimensions'][dimension_key]})",
+            text=f"{translations[lang]['components'][component_key]} ({translations[lang]['dimensions'][dimension_key]})",
             x=0.5
         ),
         font=dict(
