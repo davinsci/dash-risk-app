@@ -93,16 +93,16 @@ for name, df in dimensions.items():
     })
     
     df['VI_desc (EN)'] = df['VI (EN)'].map({
-        'Extreme': 'High number of threats, lacks effective means to protect themselves.',
-        'High': 'Exposed to multiple risk factors, limited access to protection mechanisms.',
+        'Extreme': 'Exposure to a high number of threats and lack of means of protection against them.',
+        'High': 'Exposure to multiple risk factors and limited access to protection mechanisms.',
         'Medium': 'Some threat factors present, but partial access to means to mitigate them.',
         'Low': 'Certain risks may exist, but threats are neither imminent nor severe.'
     })
     df['VI_desc (ES)'] = df['VI (EN)'].map({
-        'Extreme': 'Gran cantidad de amenazas, no cuenta con medios efectivas para protegerse.',
-        'High': 'Expuesta a varios factores de riesgo, acceso limitado a mecanismos de protección.',
-        'Medium': 'Algunos factores de amenaza, pero acceso parcial a medios mitigar dichas amenazas.',
-        'Low': 'Existir ciertos riesgos, pero las amenazas no son inminentes o severas.'
+        'Extreme': 'Existe gran cantidad de amenazas y no se cuenta con medios efectivos para protegersede estas.',
+        'High': 'Exposición a varios factores de riesgo y acceso limitado a mecanismos de protección.',
+        'Medium': 'Existen factores de amenaza y hay acceso parcial a medios para mitigar dichas amenazas.',
+        'Low': 'Existen ciertos riesgos, pero las amenazas no son inminentes o severas.'
     })
     
 translations = {
@@ -113,8 +113,8 @@ translations = {
                      'D4': 'Health Security', 'D5': 'Political Security', 'D6': 'Community Security', 
                      'D7': 'Environmental Security', 'D8': 'Ontological Security', 'D9': 'Technological Security'},
         'components': {
-            'Average': 'Average', 'Exposure': 'Exposure',
-            'Protection': 'Protection', 'Rights': 'Rights'
+            'Average': 'Level of Vulnerability', 'Exposure': 'Level of Exposure to Threats',
+            'Protection': 'Level of Access to Protection Mechanisms', 'Rights': 'Level of Freedom to Exercise Rights'
         }
     },
     '(ES)': {
@@ -124,8 +124,8 @@ translations = {
                      'D4': 'Seguridad Sanitaria', 'D5': 'Seguridad Política', 'D6': 'Seguridad Comunitaria', 
                      'D7': 'Seguridad Ambiental', 'D8': 'Seguridad Ontológica', 'D9': 'Seguridad Tecnológica'},
         'components': {
-            'Average': 'Promedio', 'Exposure': 'Exposición',
-            'Protection': 'Protección', 'Rights': 'Derechos'
+            'Average': 'Nivel de Vulnerabilidad', 'Exposure': 'Nivel de Exposición a Amenazas',
+            'Protection': 'Nivel de Acceso a Mecanismos de Protección', 'Rights': 'Nivel de Libertad para Ejercer Derechos'
         }
     }
 }
@@ -144,13 +144,13 @@ intro_descriptions = {
 
 component_descriptions = {
     '(EN)': {
-        'Average': 'An aggregate of all indicators across components.',
+        'Average': 'Weighted average of scores for exposure to threats, access to protection, and freedom to exercise rights.',
         'Exposure': 'Exposure to threats: How exposed was the person to factors and situations that endangered their life, livelihood, or rights?',
         'Protection': 'Access to protection mechanisms: How accessible and effective were the resources, services, or support systems to protect against or recover from those threats?',
         'Rights': 'Freedom to exercise rights: To what extent was the person able to fully and freely exercise their rights without restrictions?'
     },
     '(ES)': {
-        'Average': 'Un promedio de todos los indicadores entre componentes.',
+        'Average': 'Promedio ponderado de las puntuaciones sobre la exposición a amenazas, el acceso a protección y la libertad para ejercer derechos.',
         'Exposure': 'Exposición a amenazas: ¿Qué tan expuesta estuvo la persona a situaciones que ponen en riesgo su vida, sustento o derechos?',
         'Protection': 'Acceso a mecanismos de protección: ¿Qué tan accesibles y eficaces fueron los recursos, servicios o apoyos para protegerse o recuperarse frente a esas amenazas?',
         'Rights': 'Libertad para ejercer derechos: ¿Qué tanto margen tuvo la persona para ejercer sus derechos de manera plena y sin restricciones?'
