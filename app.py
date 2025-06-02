@@ -232,7 +232,7 @@ app.layout = html.Div([
     ], style={'width': '60%', 'margin': 'auto', 'padding': '20px'}),
 
     dcc.Graph(id='bar-chart'),
-    html.Img(src='/assets/logo.png', className="bottom-right-logo"
+    html.Img(src='/assets/DVS Logo 23.png', className="bottom-right-logo"
 ], style={'fontFamily': 'Avenir Book'})
 
 @app.callback(
