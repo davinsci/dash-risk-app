@@ -231,8 +231,8 @@ app.layout = html.Div([
         )
     ], style={'width': '60%', 'margin': 'auto', 'padding': '20px'}),
 
-    dcc.Graph(id='bar-chart'),
-    html.Img(src="/logo.png", style={"position": "absolute", "bottom": "10px", "right": "10px", "width": "100px"})
+    dcc.Graph(id='bar-chart')
+#   html.Img(src="/logo.png", style={"position": "absolute", "bottom": "10px", "right": "10px", "width": "100px"})
 ], style={'fontFamily': 'Avenir Book'})
 
 @app.callback(
